@@ -1,16 +1,18 @@
 # Take-Home Assessment: Rough Country Next.js Part Finder
 
-**Role:** Senior Next.js Developer
-**Expected Time:** 2–4 hours for core requirements
-**Bonus Depth:** Optional, if you want to demonstrate additional senior-level judgment
+**Role:** Junior Next.js Developer
+**Expected Time:** 2–3 hours
+**Bonus work:** Optional; only attempt if time allows
 
 ## Overview
 
-At Rough Country, performance, SEO, and fitment accuracy are critical. We need fast, crawlable product discovery experiences that help customers find parts for their specific vehicle.
+At Rough Country, customers often shop for products based on their vehicle. A common pattern on our site is a Year / Make / Model selector that helps customers find products that fit their truck, Jeep, or SUV.
 
-Your task is to build a simplified **Year / Make / Model** part finder using the **Next.js App Router**.
+Your task is to build a simple vehicle-based product finder using Next.js.
 
-We are not looking for pixel-perfect CSS. We are looking for clean architecture, strong rendering decisions, resilient data handling, and clear reasoning.
+We are not looking for pixel-perfect styling. We care more about correctness, clean React code, good user experience, and your ability to explain your work.
+
+---
 
 ## The Challenge
 
@@ -22,179 +24,164 @@ Build a product listing page with three dependent dropdowns:
 
 Rules:
 
-* Make cannot be selected until Year is chosen.
-* Model cannot be selected until Make is chosen.
+* Make should be disabled until Year is selected.
+* Model should be disabled until Make is selected.
 * Changing Year should clear Make and Model.
 * Changing Make should clear Model.
-* Once Year, Make, and Model are selected, matching mock products should display.
+* Once Year, Make, and Model are selected, show matching products.
+* If no matching products exist, show a helpful empty state.
 
 Example URL:
 
-```txt
+```txt id="8jqb1f"
 /part-finder?year=2021&make=ford&model=bronco
 ```
 
+The selected filters should be reflected in the URL so the page can be refreshed or shared.
+
+---
+
 ## Core Requirements
 
-### 1. URL as the Source of Truth
+### 1. Build the Filter UI
 
-Filter state must live in the URL search parameters.
+Create a page with:
 
-A user should be able to:
+* A Year dropdown.
+* A Make dropdown.
+* A Model dropdown.
+* A product grid or product list.
 
-* Refresh the page and preserve the selected filters.
-* Share the URL and load the same filtered state.
-* Navigate quickly between selections without the UI becoming stale or incorrect.
+The dropdowns should update based on the user’s previous selections.
 
-Use stable, readable URL values such as:
+For example:
 
-```txt
-?year=2021&make=ford&model=grand-cherokee
+* A user selects `2021`.
+* The Make dropdown becomes available.
+* The user selects `Ford`.
+* The Model dropdown becomes available.
+* The user selects `Bronco`.
+* Matching products appear.
+
+---
+
+### 2. Use the URL for Selected Filters
+
+The selected vehicle should appear in the URL search parameters.
+
+For example:
+
+```txt id="3v6nj7"
+?year=2021&make=ford&model=bronco
 ```
-
-Display labels may differ from URL values.
-
-### 2. Server and Client Boundaries
-
-Use the Next.js App Router thoughtfully.
-
-We want to see that you understand where React Server Components and Client Components belong.
 
 Expected behavior:
 
-* Initial product results should be server-rendered when a valid full selection exists.
-* Dropdowns should feel responsive on the client.
-* Avoid making the entire page a Client Component unless you can clearly justify that decision.
+* Refreshing the page should keep the selected filters.
+* Sharing the URL should load the same selected filters.
+* Changing a dropdown should update the URL.
 
-### 3. Loading and Error States
+You may use Next.js routing tools such as `useRouter`, `usePathname`, and `useSearchParams`.
 
-The provided mock API includes artificial latency and optional random failures.
+---
 
-Your UI should gracefully handle:
+### 3. Handle Loading, Errors, and Empty Results
 
-* Loading states.
-* Empty product results.
-* Invalid URL combinations.
-* API errors.
+The mock API includes artificial delay and may throw an error.
 
-Use Suspense and/or route-level error handling where appropriate.
+Your UI should handle:
 
-### 4. Caching Strategy
+* Loading state while data is being fetched.
+* Error state if the API fails.
+* Empty state if no products match.
+* Disabled dropdowns when selections are incomplete.
 
-Vehicle filter data changes rarely. Product inventory may change more often.
+The error UI does not need to be fancy. A simple friendly message is fine.
 
-Implement or clearly explain a caching strategy for:
+---
 
-* Year / Make / Model data.
-* Product results.
+### 4. Write Clean, Understandable Code
 
-Because this mock API is a local async utility rather than a real HTTP fetch, it is acceptable to explain how your strategy would map to real production data fetching.
+We are looking for code that is easy to read and reason about.
 
-### 5. Race Condition Safety
+Please try to:
 
-The UI should remain correct during rapid filter changes.
+* Break the UI into reasonable components.
+* Avoid putting everything into one giant file.
+* Use TypeScript types where helpful.
+* Use clear variable and function names.
+* Keep styling simple.
 
-You may solve this through URL-driven navigation, request cancellation, keyed rendering, transition state, local derivation of dropdown options, or another appropriate approach.
+---
 
-Explain your decision in the README.
+## Deliverables
+
+Please submit:
+
+1. A public GitHub repository.
+2. A `README.md` with:
+
+   * Setup instructions.
+   * A brief explanation of how your filter state works.
+   * A brief explanation of how you handle loading, errors, and empty results.
+   * Any tradeoffs or unfinished items.
+
+A Loom video is not required for this junior assessment.
+
+---
 
 ## Bonus Items
 
-These are not required, but they may help demonstrate senior-level depth:
+These are not required. They are only here if you finish early and want to show extra depth.
 
-* Fine-grained Suspense boundaries.
-* `error.tsx` boundaries with retry behavior.
-* Metadata, canonical URL, or SEO strategy explanation.
-* Accessibility improvements.
-* Basic tests.
-* Optimistic or pending UI with `useTransition`.
-* Route normalization or redirects for invalid/stale params.
-* A short Loom walkthrough.
+* Use slugs in the URL, such as `ford` instead of `Ford`.
+* Add basic tests for filter behavior.
+* Add simple responsive styling.
+* Add a retry button when the API fails.
+* Use React Suspense or Next.js loading/error files.
+* Server-render the initial selected product results.
+* Add basic page metadata for SEO.
+* Validate invalid URL combinations and reset them gracefully.
+
+---
 
 ## Mock API
 
-Use or adapt the following mock API.
+Use the following mock API as your data source.
 
-```ts
+You may reorganize it if needed, but do not remove the artificial delay completely.
+
+```ts id="tae9ji"
 // mockApi.ts
 
 export interface VehicleFilterData {
   years: number[];
-  makes: Record<number, VehicleMake[]>; // Year -> Makes
-  models: Record<number, Record<string, VehicleModel[]>>; // Year -> Make Slug -> Models
-}
-
-export interface VehicleMake {
-  label: string;
-  slug: string;
-}
-
-export interface VehicleModel {
-  label: string;
-  slug: string;
+  makes: Record<number, string[]>; // Year -> Makes
+  models: Record<number, Record<string, string[]>>; // Year -> Make -> Models
 }
 
 const VEHICLE_DATA: VehicleFilterData = {
   years: [2021, 2022, 2023],
   makes: {
-    2021: [
-      { label: "Ford", slug: "ford" },
-      { label: "Jeep", slug: "jeep" },
-      { label: "Chevrolet", slug: "chevrolet" },
-    ],
-    2022: [
-      { label: "Ford", slug: "ford" },
-      { label: "Jeep", slug: "jeep" },
-      { label: "Toyota", slug: "toyota" },
-    ],
-    2023: [
-      { label: "Ford", slug: "ford" },
-      { label: "Toyota", slug: "toyota" },
-      { label: "Ram", slug: "ram" },
-    ],
+    2021: ["Ford", "Jeep", "Chevrolet"],
+    2022: ["Ford", "Jeep", "Toyota"],
+    2023: ["Ford", "Toyota", "Ram"],
   },
   models: {
     2021: {
-      ford: [
-        { label: "Bronco", slug: "bronco" },
-        { label: "Ranger", slug: "ranger" },
-      ],
-      jeep: [
-        { label: "Wrangler", slug: "wrangler" },
-        { label: "Grand Cherokee", slug: "grand-cherokee" },
-      ],
-      chevrolet: [
-        { label: "Silverado", slug: "silverado" },
-        { label: "Colorado", slug: "colorado" },
-      ],
+      Ford: ["Bronco", "Ranger"],
+      Jeep: ["Wrangler", "Grand Cherokee"],
+      Chevrolet: ["Silverado", "Colorado", "Tahoe"],
     },
     2022: {
-      ford: [
-        { label: "F-150", slug: "f-150" },
-        { label: "Ranger", slug: "ranger" },
-      ],
-      jeep: [
-        { label: "Wrangler", slug: "wrangler" },
-        { label: "Gladiator", slug: "gladiator" },
-      ],
-      toyota: [
-        { label: "Tacoma", slug: "tacoma" },
-        { label: "4Runner", slug: "4runner" },
-      ],
+      Ford: ["F-150", "Ranger"],
+      Jeep: ["Wrangler", "Gladiator"],
+      Toyota: ["Tacoma", "4Runner"],
     },
     2023: {
-      ford: [
-        { label: "F-150", slug: "f-150" },
-        { label: "Bronco", slug: "bronco" },
-      ],
-      toyota: [
-        { label: "Tundra", slug: "tundra" },
-        { label: "Tacoma", slug: "tacoma" },
-      ],
-      ram: [
-        { label: "1500", slug: "1500" },
-        { label: "2500", slug: "2500" },
-      ],
+      Ford: ["Bronco", "F-150"],
+      Toyota: ["Tacoma", "Tundra", "4Runner"],
+      Ram: ["1500", "2500"],
     },
   },
 };
@@ -203,10 +190,8 @@ export interface Product {
   id: string;
   name: string;
   year: number;
-  makeSlug: string;
-  makeLabel: string;
-  modelSlug: string;
-  modelLabel: string;
+  make: string;
+  model: string;
   price: number;
   inStock: boolean;
 }
@@ -216,10 +201,8 @@ const MOCK_PRODUCTS: Product[] = [
     id: "1",
     name: "6-Inch Suspension Lift Kit",
     year: 2021,
-    makeSlug: "ford",
-    makeLabel: "Ford",
-    modelSlug: "bronco",
-    modelLabel: "Bronco",
+    make: "Ford",
+    model: "Bronco",
     price: 1299.95,
     inStock: true,
   },
@@ -227,10 +210,8 @@ const MOCK_PRODUCTS: Product[] = [
     id: "2",
     name: "Heavy Duty Front Bumper",
     year: 2021,
-    makeSlug: "ford",
-    makeLabel: "Ford",
-    modelSlug: "bronco",
-    modelLabel: "Bronco",
+    make: "Ford",
+    model: "Bronco",
     price: 749.99,
     inStock: true,
   },
@@ -238,10 +219,8 @@ const MOCK_PRODUCTS: Product[] = [
     id: "3",
     name: "Premium N3 Loaded Struts",
     year: 2022,
-    makeSlug: "ford",
-    makeLabel: "Ford",
-    modelSlug: "f-150",
-    modelLabel: "F-150",
+    make: "Ford",
+    model: "F-150",
     price: 349.95,
     inStock: false,
   },
@@ -249,10 +228,8 @@ const MOCK_PRODUCTS: Product[] = [
     id: "4",
     name: "Dual Row LED Light Bar",
     year: 2021,
-    makeSlug: "jeep",
-    makeLabel: "Jeep",
-    modelSlug: "wrangler",
-    modelLabel: "Wrangler",
+    make: "Jeep",
+    model: "Wrangler",
     price: 189.99,
     inStock: true,
   },
@@ -260,10 +237,8 @@ const MOCK_PRODUCTS: Product[] = [
     id: "5",
     name: "Tubular Rock Sliders",
     year: 2022,
-    makeSlug: "jeep",
-    makeLabel: "Jeep",
-    modelSlug: "wrangler",
-    modelLabel: "Wrangler",
+    make: "Jeep",
+    model: "Wrangler",
     price: 429.95,
     inStock: true,
   },
@@ -271,27 +246,26 @@ const MOCK_PRODUCTS: Product[] = [
     id: "6",
     name: "Vertex Coilovers Pair",
     year: 2023,
-    makeSlug: "toyota",
-    makeLabel: "Toyota",
-    modelSlug: "tundra",
-    modelLabel: "Tundra",
+    make: "Toyota",
+    model: "Tundra",
     price: 1599.99,
     inStock: true,
   },
 ];
 
-const FAILURE_RATE = Number(process.env.MOCK_API_FAILURE_RATE ?? 0.15);
-const MIN_LATENCY = Number(process.env.MOCK_API_MIN_LATENCY_MS ?? 500);
-const MAX_LATENCY = Number(process.env.MOCK_API_MAX_LATENCY_MS ?? 3000);
+const MIN_LATENCY_MS = Number(process.env.MOCK_API_MIN_LATENCY_MS ?? 300);
+const MAX_LATENCY_MS = Number(process.env.MOCK_API_MAX_LATENCY_MS ?? 1200);
+const FAILURE_RATE = Number(process.env.MOCK_API_FAILURE_RATE ?? 0.1);
 
 async function simulateNetwork() {
   const delay =
-    Math.floor(Math.random() * (MAX_LATENCY - MIN_LATENCY + 1)) + MIN_LATENCY;
+    Math.floor(Math.random() * (MAX_LATENCY_MS - MIN_LATENCY_MS + 1)) +
+    MIN_LATENCY_MS;
 
   await new Promise((resolve) => setTimeout(resolve, delay));
 
   if (Math.random() < FAILURE_RATE) {
-    throw new Error("Internal Server Error: Database connection timeout.");
+    throw new Error("Something went wrong while loading data.");
   }
 }
 
@@ -300,62 +274,55 @@ export async function fetchFilterData(): Promise<VehicleFilterData> {
   return VEHICLE_DATA;
 }
 
-export async function fetchProducts(params: {
-  year: number;
-  make: string;
-  model: string;
-}): Promise<Product[]> {
+export async function fetchProducts(
+  year: number,
+  make: string,
+  model: string
+): Promise<Product[]> {
   await simulateNetwork();
 
   return MOCK_PRODUCTS.filter(
     (product) =>
-      product.year === params.year &&
-      product.makeSlug === params.make &&
-      product.modelSlug === params.model
+      product.year === year &&
+      product.make.toLowerCase() === make.toLowerCase() &&
+      product.model.toLowerCase() === model.toLowerCase()
   );
 }
 ```
 
-## Deliverables
+---
 
-Please provide:
+## What We Will Be Looking For
 
-1. A link to a public GitHub repository.
-2. A `README.md` explaining:
+### Correctness
 
-   * Your App Router structure.
-   * What is server-rendered vs client-rendered.
-   * How URL state is handled.
-   * How loading and error states are handled.
-   * Your caching strategy.
-   * How your solution avoids stale UI or race conditions.
-   * Any tradeoffs you made due to time.
-3. Optional: a 3–5 minute Loom video walking through your architecture.
+* Dropdowns enable and disable correctly.
+* Dependent selections reset correctly.
+* Matching products display correctly.
+* Empty and error states are handled.
 
-## What We Are Looking For
+### React Fundamentals
 
-### Architecture
+* Clear component structure.
+* Sensible state management.
+* Proper use of props and TypeScript types.
+* Avoids unnecessary complexity.
 
-* Clean App Router structure.
-* Appropriate Server Component and Client Component boundaries.
-* Clear separation between data access, validation, UI, and URL state.
+### Next.js Basics
 
-### Performance
+* Uses the App Router.
+* Updates and reads URL search parameters.
+* Preserves selected filters on refresh.
 
-* Server-rendered product results when possible.
-* Minimal unnecessary client-side rendering.
-* Responsive filter interactions.
-* Thoughtful caching decisions.
+### User Experience
 
-### Resilience
+* Clear loading state.
+* Clear error message.
+* Clear empty state.
+* Interface is usable even if styling is minimal.
 
-* Graceful loading states.
-* Graceful error handling.
-* Correct behavior during rapid filter changes.
-* Safe handling of invalid or incomplete URL params.
+### Communication
 
-### Senior-Level Judgment
-
-We are not looking for the most complex solution.
-
-We are looking for someone who can make practical technical decisions, explain tradeoffs clearly, and build something that resembles how they would approach production code.
+* README is clear.
+* Setup steps work.
+* Tradeoffs are explained honestly.
