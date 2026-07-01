@@ -1,135 +1,105 @@
-# Take-Home Assessment: Rough Country Vehicle Product Finder
+# Take-Home Assessment: Rough Country Product Filter
 
 **Role:** Junior Frontend / Junior Next.js Developer
-**Expected Time:** 2–3 hours
+**Expected Time:** 60–90 minutes
 
 ## Overview
 
-At Rough Country, customers need to find parts that fit their vehicle. A common shopping experience is selecting a Year, Make, and Model, then seeing matching products.
+At Rough Country, customers need to find products that match their vehicle.
 
-Your task is to build a simple vehicle product finder.
+This exercise is a small version of that idea. We want to see how you work with React components, state, lists, and basic filtering.
 
-We are not looking for a perfect production system. We are looking for clean React code, good fundamentals, and clear thinking.
+We are not looking for a perfect production system. We are looking for clean, understandable code.
+
+---
+
+## Starter Project
+
+You will be given a starter Next.js project with:
+
+* The project already created.
+* TypeScript already configured.
+* Mock product data already provided.
+* A basic page already set up.
+
+Your task is to complete the product filtering UI.
 
 ---
 
 ## The Challenge
 
-Build a page that lets a user select:
+Build a simple product filter that allows a user to filter products by vehicle make.
 
-1. Year
-2. Make
-3. Model
+The page should include:
 
-After the user selects all three, show a list of matching products.
+1. A dropdown for Make.
+2. A list of products.
+3. A clear empty state when no products match.
 
 ---
 
 ## Core Requirements
 
-### 1. Build Dependent Dropdowns
+### 1. Render the Product List
 
-Create three dropdowns:
-
-* Year
-* Make
-* Model
-
-Behavior:
-
-* The Make dropdown should be disabled until a Year is selected.
-* The Model dropdown should be disabled until a Make is selected.
-* When the Year changes, clear the selected Make and Model.
-* When the Make changes, clear the selected Model.
-* Only show Makes that are valid for the selected Year.
-* Only show Models that are valid for the selected Year and Make.
-
-Example:
-
-If the user selects:
-
-```txt id="v6x2nn"
-2021 → Ford → Bronco
-```
-
-Then the page should show products matching a 2021 Ford Bronco.
-
----
-
-### 2. Display Matching Products
-
-Once Year, Make, and Model are selected, show matching products.
+Display all products when no Make is selected.
 
 Each product should show:
 
-* Name
+* Product name
+* Vehicle year
+* Vehicle make
+* Vehicle model
 * Price
 * Whether it is in stock
 
-If no products match, show a friendly message such as:
+---
 
-```txt id="ejtlts"
-No products found for this vehicle.
-```
+### 2. Add a Make Dropdown
 
-Before all three selections are made, show a message such as:
+Create a dropdown that allows the user to select a Make.
 
-```txt id="6ii0la"
-Select your vehicle to see matching products.
-```
+Example options:
+
+* All Makes
+* Ford
+* Jeep
+* Toyota
+* Ram
+* Chevrolet
+
+When a Make is selected, only products matching that Make should be shown.
 
 ---
 
-### 3. Use Local React State
+### 3. Add an Empty State
 
-For the core assignment, it is okay to use React state with `useState`.
+If no products match the selected Make, show a helpful message.
 
-You do **not** need to use the URL as the source of truth for the core version.
+Example:
 
-We want to see that you understand:
-
-* Component state.
-* Derived options.
-* Filtering data.
-* Resetting dependent selections.
-* Rendering conditional UI.
+```txt id="l12p5s"
+No products found for this make.
+```
 
 ---
 
 ### 4. Keep the Code Clean
 
-Please avoid putting everything into one large component.
+Please try to:
 
-A reasonable structure might look like:
+* Use clear variable names.
+* Keep the code readable.
+* Break things into components if it makes sense.
+* Avoid overcomplicating the solution.
 
-```txt id="yvhpux"
-app/
-  part-finder/
-    page.tsx
-components/
-  VehicleSelector.tsx
-  ProductList.tsx
-lib/
-  mockData.ts
-```
-
-This structure is only a suggestion. You may organize it differently if you prefer.
+A simple working solution is better than a complicated unfinished one.
 
 ---
 
-## Provided Mock Data
+## Provided Data
 
-Use this mock data as your starting point.
-
-```ts id="0w4t4v"
-// lib/mockData.ts
-
-export interface VehicleFilterData {
-  years: number[];
-  makes: Record<number, string[]>;
-  models: Record<number, Record<string, string[]>>;
-}
-
+```ts id="o19w8b"
 export interface Product {
   id: string;
   name: string;
@@ -139,32 +109,6 @@ export interface Product {
   price: number;
   inStock: boolean;
 }
-
-export const VEHICLE_DATA: VehicleFilterData = {
-  years: [2021, 2022, 2023],
-  makes: {
-    2021: ["Ford", "Jeep", "Chevrolet"],
-    2022: ["Ford", "Jeep", "Toyota"],
-    2023: ["Ford", "Toyota", "Ram"],
-  },
-  models: {
-    2021: {
-      Ford: ["Bronco", "Ranger"],
-      Jeep: ["Wrangler", "Grand Cherokee"],
-      Chevrolet: ["Silverado", "Colorado", "Tahoe"],
-    },
-    2022: {
-      Ford: ["F-150", "Ranger"],
-      Jeep: ["Wrangler", "Gladiator"],
-      Toyota: ["Tacoma", "4Runner"],
-    },
-    2023: {
-      Ford: ["Bronco", "F-150"],
-      Toyota: ["Tacoma", "Tundra", "4Runner"],
-      Ram: ["1500", "2500"],
-    },
-  },
-};
 
 export const MOCK_PRODUCTS: Product[] = [
   {
@@ -226,75 +170,43 @@ export const MOCK_PRODUCTS: Product[] = [
 
 ---
 
-## README Requirements
-
-Include a short `README.md` with:
-
-1. Setup instructions.
-2. A brief explanation of how the dropdowns work.
-3. A brief explanation of how products are filtered.
-4. Anything you would improve with more time.
-
----
-
-## Bonus Requirements
+## Bonus Tasks
 
 Only attempt these if the core requirements are complete.
 
-### Bonus 1: URL State
+### Bonus 1: Add a Year Filter
 
-Update the URL when a vehicle is selected.
+Add a second dropdown for Year.
 
-Example:
+The user should be able to filter by:
 
-```txt id="w9t2ea"
-/part-finder?year=2021&make=ford&model=bronco
-```
-
-Refreshing the page should preserve the selected vehicle.
+* Make
+* Year
+* Make and Year together
 
 ---
 
-### Bonus 2: Loading State
+### Bonus 2: Add a Reset Button
 
-Create a fake async function that waits before returning products.
-
-Show a loading message while products are being loaded.
-
-Example:
-
-```ts id="5mlxar"
-export async function fetchProducts(
-  year: number,
-  make: string,
-  model: string
-): Promise<Product[]> {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  return MOCK_PRODUCTS.filter(
-    (product) =>
-      product.year === year &&
-      product.make === make &&
-      product.model === model
-  );
-}
-```
+Add a button that clears all selected filters and shows all products again.
 
 ---
 
-### Bonus 3: Error State
+### Bonus 3: Improve Styling
 
-Update the fake async function so it sometimes throws an error.
-
-Show a friendly error message if product loading fails.
-
----
-
-### Bonus 4: Basic Styling
-
-Make the page clean and usable on desktop and mobile.
+Make the page clean and easy to use.
 
 This does not need to match Rough Country’s website.
+
+---
+
+## README
+
+Add a short README with:
+
+1. How to run the project.
+2. What you completed.
+3. Anything you would improve with more time.
 
 ---
 
@@ -302,34 +214,25 @@ This does not need to match Rough Country’s website.
 
 ### React Fundamentals
 
-* Correct use of state.
-* Correct use of props.
-* Correct conditional rendering.
-* Good handling of dependent dropdowns.
-* No invalid selections left behind when Year or Make changes.
+* Can you render a list of data?
+* Can you use state for the selected filter?
+* Can you update the UI when state changes?
+* Can you conditionally render an empty state?
 
 ### JavaScript Fundamentals
 
-* Correct filtering logic.
-* Clear variable names.
-* Clean array/object usage.
-* Avoiding unnecessary complexity.
+* Can you filter an array?
+* Can you work with objects and arrays clearly?
+* Can you avoid unnecessary complexity?
 
-### Code Organization
+### Code Quality
 
-* Components are reasonably separated.
-* Data is separated from UI.
-* Code is readable.
-
-### User Experience
-
-* Disabled dropdowns behave correctly.
-* Empty states are clear.
-* Product results are easy to understand.
-* The page does not feel broken when no vehicle is selected.
+* Is the code readable?
+* Are names clear?
+* Is the solution easy to follow?
 
 ### Communication
 
-* README is clear.
-* Tradeoffs are explained honestly.
-* The candidate can explain their code during the interview.
+* Can you explain what you built?
+* Can you describe what you would improve next?
+
