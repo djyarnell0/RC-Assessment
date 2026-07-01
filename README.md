@@ -1,166 +1,146 @@
-# Take-Home Assessment: Rough Country Next.js Part Finder
+# Take-Home Assessment: Rough Country Vehicle Product Finder
 
-**Role:** Junior Next.js Developer
+**Role:** Junior Frontend / Junior Next.js Developer
 **Expected Time:** 2–3 hours
-**Bonus work:** Optional; only attempt if time allows
 
 ## Overview
 
-At Rough Country, customers often shop for products based on their vehicle. A common pattern on our site is a Year / Make / Model selector that helps customers find products that fit their truck, Jeep, or SUV.
+At Rough Country, customers need to find parts that fit their vehicle. A common shopping experience is selecting a Year, Make, and Model, then seeing matching products.
 
-Your task is to build a simple vehicle-based product finder using Next.js.
+Your task is to build a simple vehicle product finder.
 
-We are not looking for pixel-perfect styling. We care more about correctness, clean React code, good user experience, and your ability to explain your work.
+We are not looking for a perfect production system. We are looking for clean React code, good fundamentals, and clear thinking.
 
 ---
 
 ## The Challenge
 
-Build a product listing page with three dependent dropdowns:
+Build a page that lets a user select:
 
 1. Year
 2. Make
 3. Model
 
-Rules:
-
-* Make should be disabled until Year is selected.
-* Model should be disabled until Make is selected.
-* Changing Year should clear Make and Model.
-* Changing Make should clear Model.
-* Once Year, Make, and Model are selected, show matching products.
-* If no matching products exist, show a helpful empty state.
-
-Example URL:
-
-```txt id="8jqb1f"
-/part-finder?year=2021&make=ford&model=bronco
-```
-
-The selected filters should be reflected in the URL so the page can be refreshed or shared.
+After the user selects all three, show a list of matching products.
 
 ---
 
 ## Core Requirements
 
-### 1. Build the Filter UI
+### 1. Build Dependent Dropdowns
 
-Create a page with:
+Create three dropdowns:
 
-* A Year dropdown.
-* A Make dropdown.
-* A Model dropdown.
-* A product grid or product list.
+* Year
+* Make
+* Model
 
-The dropdowns should update based on the user’s previous selections.
+Behavior:
 
-For example:
+* The Make dropdown should be disabled until a Year is selected.
+* The Model dropdown should be disabled until a Make is selected.
+* When the Year changes, clear the selected Make and Model.
+* When the Make changes, clear the selected Model.
+* Only show Makes that are valid for the selected Year.
+* Only show Models that are valid for the selected Year and Make.
 
-* A user selects `2021`.
-* The Make dropdown becomes available.
-* The user selects `Ford`.
-* The Model dropdown becomes available.
-* The user selects `Bronco`.
-* Matching products appear.
+Example:
 
----
+If the user selects:
 
-### 2. Use the URL for Selected Filters
-
-The selected vehicle should appear in the URL search parameters.
-
-For example:
-
-```txt id="3v6nj7"
-?year=2021&make=ford&model=bronco
+```txt id="v6x2nn"
+2021 → Ford → Bronco
 ```
 
-Expected behavior:
-
-* Refreshing the page should keep the selected filters.
-* Sharing the URL should load the same selected filters.
-* Changing a dropdown should update the URL.
-
-You may use Next.js routing tools such as `useRouter`, `usePathname`, and `useSearchParams`.
+Then the page should show products matching a 2021 Ford Bronco.
 
 ---
 
-### 3. Handle Loading, Errors, and Empty Results
+### 2. Display Matching Products
 
-The mock API includes artificial delay and may throw an error.
+Once Year, Make, and Model are selected, show matching products.
 
-Your UI should handle:
+Each product should show:
 
-* Loading state while data is being fetched.
-* Error state if the API fails.
-* Empty state if no products match.
-* Disabled dropdowns when selections are incomplete.
+* Name
+* Price
+* Whether it is in stock
 
-The error UI does not need to be fancy. A simple friendly message is fine.
+If no products match, show a friendly message such as:
 
----
+```txt id="ejtlts"
+No products found for this vehicle.
+```
 
-### 4. Write Clean, Understandable Code
+Before all three selections are made, show a message such as:
 
-We are looking for code that is easy to read and reason about.
-
-Please try to:
-
-* Break the UI into reasonable components.
-* Avoid putting everything into one giant file.
-* Use TypeScript types where helpful.
-* Use clear variable and function names.
-* Keep styling simple.
+```txt id="6ii0la"
+Select your vehicle to see matching products.
+```
 
 ---
 
-## Deliverables
+### 3. Use Local React State
 
-Please submit:
+For the core assignment, it is okay to use React state with `useState`.
 
-1. A public GitHub repository.
-2. A `README.md` with:
+You do **not** need to use the URL as the source of truth for the core version.
 
-   * Setup instructions.
-   * A brief explanation of how your filter state works.
-   * A brief explanation of how you handle loading, errors, and empty results.
-   * Any tradeoffs or unfinished items.
+We want to see that you understand:
 
-A Loom video is not required for this junior assessment.
-
----
-
-## Bonus Items
-
-These are not required. They are only here if you finish early and want to show extra depth.
-
-* Use slugs in the URL, such as `ford` instead of `Ford`.
-* Add basic tests for filter behavior.
-* Add simple responsive styling.
-* Add a retry button when the API fails.
-* Use React Suspense or Next.js loading/error files.
-* Server-render the initial selected product results.
-* Add basic page metadata for SEO.
-* Validate invalid URL combinations and reset them gracefully.
+* Component state.
+* Derived options.
+* Filtering data.
+* Resetting dependent selections.
+* Rendering conditional UI.
 
 ---
 
-## Mock API
+### 4. Keep the Code Clean
 
-Use the following mock API as your data source.
+Please avoid putting everything into one large component.
 
-You may reorganize it if needed, but do not remove the artificial delay completely.
+A reasonable structure might look like:
 
-```ts id="tae9ji"
-// mockApi.ts
+```txt id="yvhpux"
+app/
+  part-finder/
+    page.tsx
+components/
+  VehicleSelector.tsx
+  ProductList.tsx
+lib/
+  mockData.ts
+```
+
+This structure is only a suggestion. You may organize it differently if you prefer.
+
+---
+
+## Provided Mock Data
+
+Use this mock data as your starting point.
+
+```ts id="0w4t4v"
+// lib/mockData.ts
 
 export interface VehicleFilterData {
   years: number[];
-  makes: Record<number, string[]>; // Year -> Makes
-  models: Record<number, Record<string, string[]>>; // Year -> Make -> Models
+  makes: Record<number, string[]>;
+  models: Record<number, Record<string, string[]>>;
 }
 
-const VEHICLE_DATA: VehicleFilterData = {
+export interface Product {
+  id: string;
+  name: string;
+  year: number;
+  make: string;
+  model: string;
+  price: number;
+  inStock: boolean;
+}
+
+export const VEHICLE_DATA: VehicleFilterData = {
   years: [2021, 2022, 2023],
   makes: {
     2021: ["Ford", "Jeep", "Chevrolet"],
@@ -186,17 +166,7 @@ const VEHICLE_DATA: VehicleFilterData = {
   },
 };
 
-export interface Product {
-  id: string;
-  name: string;
-  year: number;
-  make: string;
-  model: string;
-  price: number;
-  inStock: boolean;
-}
-
-const MOCK_PRODUCTS: Product[] = [
+export const MOCK_PRODUCTS: Product[] = [
   {
     id: "1",
     name: "6-Inch Suspension Lift Kit",
@@ -252,77 +222,114 @@ const MOCK_PRODUCTS: Product[] = [
     inStock: true,
   },
 ];
+```
 
-const MIN_LATENCY_MS = Number(process.env.MOCK_API_MIN_LATENCY_MS ?? 300);
-const MAX_LATENCY_MS = Number(process.env.MOCK_API_MAX_LATENCY_MS ?? 1200);
-const FAILURE_RATE = Number(process.env.MOCK_API_FAILURE_RATE ?? 0.1);
+---
 
-async function simulateNetwork() {
-  const delay =
-    Math.floor(Math.random() * (MAX_LATENCY_MS - MIN_LATENCY_MS + 1)) +
-    MIN_LATENCY_MS;
+## README Requirements
 
-  await new Promise((resolve) => setTimeout(resolve, delay));
+Include a short `README.md` with:
 
-  if (Math.random() < FAILURE_RATE) {
-    throw new Error("Something went wrong while loading data.");
-  }
-}
+1. Setup instructions.
+2. A brief explanation of how the dropdowns work.
+3. A brief explanation of how products are filtered.
+4. Anything you would improve with more time.
 
-export async function fetchFilterData(): Promise<VehicleFilterData> {
-  await simulateNetwork();
-  return VEHICLE_DATA;
-}
+---
 
+## Bonus Requirements
+
+Only attempt these if the core requirements are complete.
+
+### Bonus 1: URL State
+
+Update the URL when a vehicle is selected.
+
+Example:
+
+```txt id="w9t2ea"
+/part-finder?year=2021&make=ford&model=bronco
+```
+
+Refreshing the page should preserve the selected vehicle.
+
+---
+
+### Bonus 2: Loading State
+
+Create a fake async function that waits before returning products.
+
+Show a loading message while products are being loaded.
+
+Example:
+
+```ts id="5mlxar"
 export async function fetchProducts(
   year: number,
   make: string,
   model: string
 ): Promise<Product[]> {
-  await simulateNetwork();
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   return MOCK_PRODUCTS.filter(
     (product) =>
       product.year === year &&
-      product.make.toLowerCase() === make.toLowerCase() &&
-      product.model.toLowerCase() === model.toLowerCase()
+      product.make === make &&
+      product.model === model
   );
 }
 ```
 
 ---
 
+### Bonus 3: Error State
+
+Update the fake async function so it sometimes throws an error.
+
+Show a friendly error message if product loading fails.
+
+---
+
+### Bonus 4: Basic Styling
+
+Make the page clean and usable on desktop and mobile.
+
+This does not need to match Rough Country’s website.
+
+---
+
 ## What We Will Be Looking For
-
-### Correctness
-
-* Dropdowns enable and disable correctly.
-* Dependent selections reset correctly.
-* Matching products display correctly.
-* Empty and error states are handled.
 
 ### React Fundamentals
 
-* Clear component structure.
-* Sensible state management.
-* Proper use of props and TypeScript types.
-* Avoids unnecessary complexity.
+* Correct use of state.
+* Correct use of props.
+* Correct conditional rendering.
+* Good handling of dependent dropdowns.
+* No invalid selections left behind when Year or Make changes.
 
-### Next.js Basics
+### JavaScript Fundamentals
 
-* Uses the App Router.
-* Updates and reads URL search parameters.
-* Preserves selected filters on refresh.
+* Correct filtering logic.
+* Clear variable names.
+* Clean array/object usage.
+* Avoiding unnecessary complexity.
+
+### Code Organization
+
+* Components are reasonably separated.
+* Data is separated from UI.
+* Code is readable.
 
 ### User Experience
 
-* Clear loading state.
-* Clear error message.
-* Clear empty state.
-* Interface is usable even if styling is minimal.
+* Disabled dropdowns behave correctly.
+* Empty states are clear.
+* Product results are easy to understand.
+* The page does not feel broken when no vehicle is selected.
 
 ### Communication
 
 * README is clear.
-* Setup steps work.
 * Tradeoffs are explained honestly.
+* The candidate can explain their code during the interview.
