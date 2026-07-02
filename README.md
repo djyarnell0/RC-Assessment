@@ -13,19 +13,6 @@ We are not looking for a perfect production system. We are looking for clean, un
 
 ---
 
-## Starter Project
-
-You will be given a starter Next.js project with:
-
-* The project already created.
-* TypeScript already configured.
-* Mock product data already provided.
-* A basic page already set up.
-
-Your task is to complete the product filtering UI.
-
----
-
 ## The Challenge
 
 Build a simple product filter that allows a user to filter products by vehicle make.
