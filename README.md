@@ -1,225 +1,138 @@
-# Take-Home Assessment: Rough Country Product Filter
+# Take-Home Assessment: Rough Country Part Finder
 
-**Role:** Junior Frontend / Junior Next.js Developer
-**Expected Time:** 60–90 minutes
+**Role:** Junior / Mid-level Frontend Developer (React / Next.js)
+**Expected Time:** 2–3 hours
 
 ## Overview
 
-At Rough Country, customers need to find products that match their vehicle.
+At Rough Country, customers find parts by selecting their vehicle. This exercise is a simplified version of that experience.
 
-This exercise is a small version of that idea. We want to see how you work with React components, state, lists, and basic filtering.
+We want to see how you structure React (or Next.js) code, manage dependent UI state, and filter data cleanly.
 
-We are not looking for a perfect production system. We are looking for clean, understandable code.
+We are not looking for pixel-perfect design or production architecture. A complete, readable solution beats an unfinished complex one.
+
+---
+
+## Setup
+
+1. Scaffold a new app with **Next.js (App Router)** or **Vite + React**. Either is fine.
+2. Copy `mockData.ts` from this repo into your project (or import it as-is).
+3. Build the part finder UI described below.
+
+Use TypeScript if you are comfortable with it. Plain JavaScript is acceptable.
 
 ---
 
 ## The Challenge
 
-Build a simple product filter that allows a user to filter products by vehicle make.
+Build a product listing page with three **dependent** dropdowns:
 
-The page should include:
+1. **Year**
+2. **Make**
+3. **Model**
 
-1. A dropdown for Make.
-2. A list of products.
-3. A clear empty state when no products match.
+### Filter rules
 
----
+- Make is disabled until a Year is selected.
+- Model is disabled until a Make is selected.
+- Changing Year clears Make and Model.
+- Changing Make clears Model.
+- When Year, Make, and Model are all selected, show matching products.
+- When filters are incomplete, show either all products or a prompt to finish selecting — pick one approach and keep it consistent.
 
-## Core Requirements
+### Product list
 
-### 1. Render the Product List
+Each product should display:
 
-Display all products when no Make is selected.
+- Name
+- Year / Make / Model
+- Price
+- In-stock status
 
-Each product should show:
+### Empty state
 
-* Product name
-* Vehicle year
-* Vehicle make
-* Vehicle model
-* Price
-* Whether it is in stock
+If a full selection has no matching products, show a clear message (for example: “No products found for this vehicle.”).
 
----
+### Reset
 
-### 2. Add a Make Dropdown
-
-Create a dropdown that allows the user to select a Make.
-
-Example options:
-
-* All Makes
-* Ford
-* Jeep
-* Toyota
-* Ram
-* Chevrolet
-
-When a Make is selected, only products matching that Make should be shown.
+Include a control that clears all filters.
 
 ---
 
-### 3. Add an Empty State
+## Core Requirements Checklist
 
-If no products match the selected Make, show a helpful message.
-
-Example:
-
-```txt id="l12p5s"
-No products found for this make.
-```
-
----
-
-### 4. Keep the Code Clean
-
-Please try to:
-
-* Use clear variable names.
-* Keep the code readable.
-* Break things into components if it makes sense.
-* Avoid overcomplicating the solution.
-
-A simple working solution is better than a complicated unfinished one.
+- [ ] Dependent Year → Make → Model dropdowns with the clearing rules above
+- [ ] Dropdown options come from `VEHICLE_OPTIONS` in `mockData.ts` (not hardcoded lists)
+- [ ] Products filter correctly using `MOCK_PRODUCTS`
+- [ ] Empty state when a full selection has no matches
+- [ ] Reset clears all filters
+- [ ] Code is readable and reasonably organized (components are encouraged when they help)
 
 ---
 
-## Provided Data
+## What You Do *Not* Need
 
-```ts id="o19w8b"
-export interface Product {
-  id: string;
-  name: string;
-  year: number;
-  make: string;
-  model: string;
-  price: number;
-  inStock: boolean;
-}
+Skip these unless you want them as bonuses. They are covered in our senior assessment:
 
-export const MOCK_PRODUCTS: Product[] = [
-  {
-    id: "1",
-    name: "6-Inch Suspension Lift Kit",
-    year: 2021,
-    make: "Ford",
-    model: "Bronco",
-    price: 1299.95,
-    inStock: true,
-  },
-  {
-    id: "2",
-    name: "Heavy Duty Front Bumper",
-    year: 2021,
-    make: "Ford",
-    model: "Bronco",
-    price: 749.99,
-    inStock: true,
-  },
-  {
-    id: "3",
-    name: "Premium N3 Loaded Struts",
-    year: 2022,
-    make: "Ford",
-    model: "F-150",
-    price: 349.95,
-    inStock: false,
-  },
-  {
-    id: "4",
-    name: "Dual Row LED Light Bar",
-    year: 2021,
-    make: "Jeep",
-    model: "Wrangler",
-    price: 189.99,
-    inStock: true,
-  },
-  {
-    id: "5",
-    name: "Tubular Rock Sliders",
-    year: 2022,
-    make: "Jeep",
-    model: "Wrangler",
-    price: 429.95,
-    inStock: true,
-  },
-  {
-    id: "6",
-    name: "Vertex Coilovers Pair",
-    year: 2023,
-    make: "Toyota",
-    model: "Tundra",
-    price: 1599.99,
-    inStock: true,
-  },
-];
-```
+- URL / search-param state
+- React Server Components architecture writeups
+- Caching strategies
+- Race-condition handling
+- Suspense / `error.tsx` / simulated API failures
+
+Client-side state (`useState` / similar) is the expected approach.
 
 ---
 
 ## Bonus Tasks
 
-Only attempt these if the core requirements are complete.
+Only after the core requirements work.
 
-### Bonus 1: Add a Year Filter
-
-Add a second dropdown for Year.
-
-The user should be able to filter by:
-
-* Make
-* Year
-* Make and Year together
+1. **URL state** — Put selected Year / Make / Model in the URL so refresh preserves filters.
+2. **Derive options from products** — Instead of (or in addition to) `VEHICLE_OPTIONS`, build Make/Model choices from `MOCK_PRODUCTS` for the selected Year.
+3. **Styling & accessibility** — Clean layout, keyboard-friendly controls, labels on selects.
+4. **Loading affordance** — If you introduce async data fetching, show a simple loading state.
 
 ---
 
-### Bonus 2: Add a Reset Button
+## Deliverables
 
-Add a button that clears all selected filters and shows all products again.
-
----
-
-### Bonus 3: Improve Styling
-
-Make the page clean and easy to use.
-
-This does not need to match Rough Country’s website.
-
----
-
-## README
-
-Add a short README with:
-
-1. How to run the project.
-2. What you completed.
-3. Anything you would improve with more time.
+1. A link to a public GitHub repository (or a zip if that is easier).
+2. A short `README` covering:
+   - How to install and run the project
+   - What you completed (core + any bonuses)
+   - What you would improve with more time
 
 ---
 
 ## What We Will Be Looking For
 
-### React Fundamentals
+### React / UI
 
-* Can you render a list of data?
-* Can you use state for the selected filter?
-* Can you update the UI when state changes?
-* Can you conditionally render an empty state?
+- Dependent dropdown behavior implemented correctly
+- UI updates when filters change
+- Clear empty and incomplete-filter states
 
-### JavaScript Fundamentals
+### JavaScript
 
-* Can you filter an array?
-* Can you work with objects and arrays clearly?
-* Can you avoid unnecessary complexity?
+- Filtering arrays of objects cleanly
+- Avoiding stale or inconsistent filter combinations
+- Sensible use of derived values (e.g. available makes for a year)
 
-### Code Quality
+### Code quality
 
-* Is the code readable?
-* Are names clear?
-* Is the solution easy to follow?
+- Readable names and structure
+- Components split where it helps, not where it adds noise
+- No unnecessary complexity
 
 ### Communication
 
-* Can you explain what you built?
-* Can you describe what you would improve next?
+- Can you explain what you built and what you would do next?
 
+---
+
+## Tips
+
+- Start with the filter state and clearing rules, then wire up the product list.
+- Prefer deriving filtered products from state rather than storing a second “results” list you have to keep in sync.
+- If you get stuck on scaffolding, a single-page React app is enough — we care more about the filtering logic than the framework choice.
