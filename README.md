@@ -1,13 +1,13 @@
 # Take-Home Assessment: Rough Country Part Finder
 
-**Role:** Junior / Mid-level Frontend Developer (React / Next.js)
+**Role:** Junior / Mid-level Next.js Developer
 **Expected Time:** 2–3 hours
 
 ## Overview
 
 At Rough Country, customers find parts by selecting their vehicle. This exercise is a simplified version of that experience.
 
-We want to see how you structure React (or Next.js) code, manage dependent UI state, and filter data cleanly.
+We want to see how you structure a Next.js App Router project, manage dependent UI state, and filter data cleanly.
 
 We are not looking for pixel-perfect design or production architecture. A complete, readable solution beats an unfinished complex one.
 
@@ -15,11 +15,11 @@ We are not looking for pixel-perfect design or production architecture. A comple
 
 ## Setup
 
-1. Scaffold a new app with **Next.js (App Router)** or **Vite + React**. Either is fine.
+1. Scaffold a new app with **Next.js (App Router)** and **TypeScript** (`create-next-app` is fine).
 2. Copy `mockData.ts` from this repo into your project (or import it as-is).
 3. Build the part finder UI described below.
 
-Use TypeScript if you are comfortable with it. Plain JavaScript is acceptable.
+TypeScript is required.
 
 ---
 
@@ -61,6 +61,7 @@ Include a control that clears all filters.
 
 ## Core Requirements Checklist
 
+- [ ] Built with Next.js App Router and TypeScript
 - [ ] Dependent Year → Make → Model dropdowns with the clearing rules above
 - [ ] Dropdown options come from `VEHICLE_OPTIONS` in `mockData.ts` (not hardcoded lists)
 - [ ] Products filter correctly using `MOCK_PRODUCTS`
@@ -107,14 +108,16 @@ Only after the core requirements work.
 
 ## What We Will Be Looking For
 
-### React / UI
+### Next.js / UI
 
+- App built with the Next.js App Router and TypeScript
 - Dependent dropdown behavior implemented correctly
 - UI updates when filters change
 - Clear empty and incomplete-filter states
 
-### JavaScript
+### TypeScript / JavaScript
 
+- Sensible typing for products, filters, and component props
 - Filtering arrays of objects cleanly
 - Avoiding stale or inconsistent filter combinations
 - Sensible use of derived values (e.g. available makes for a year)
@@ -135,4 +138,4 @@ Only after the core requirements work.
 
 - Start with the filter state and clearing rules, then wire up the product list.
 - Prefer deriving filtered products from state rather than storing a second “results” list you have to keep in sync.
-- If you get stuck on scaffolding, a single-page React app is enough — we care more about the filtering logic than the framework choice.
+- Client Components are fine for the interactive filters — you do not need to optimize Server vs Client boundaries for this assessment.
