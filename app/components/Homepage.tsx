@@ -9,7 +9,6 @@ import { ProductCard } from "./ProductCard";
 import { ProductListItem } from "./ProductCardItem";
 import { VehicleDropdowns } from "./VehicleDropdowns";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-
 import { buildVehicleOptions } from "../utils/BuildVehicleOptionsUtil";
 import { validateVehicleFilters } from "../utils/ValidateVehicleFilters";
 
@@ -78,7 +77,7 @@ export default function HomePage() {
     }
   }, [rawFilters, filters, updateFilters]);
 
-  // filters products based on selected year make and model, and only when all 3 have values.
+  // filters products based on selected year make and model
   const filteredProducts = MOCK_PRODUCTS.filter((product) => {
     return (
       product.year === filters.year &&
@@ -155,9 +154,6 @@ export default function HomePage() {
             direction="row"
             sx={{
               flexWrap: "wrap",
-              justifyContent: "center",
-              paddingLeft: 5,
-              paddingBottom: 5,
             }}
           >
             {MOCK_PRODUCTS.map((product) => (
@@ -177,11 +173,20 @@ export default function HomePage() {
                   {filters.year} {filters.make} {filters.model}:
                 </i>
               </Typography>
-              <ProductCard>
+              <Grid
+                container
+                spacing={2}
+                direction="row"
+                sx={{
+                  flexWrap: "wrap",
+                }}
+              >
                 {filteredProducts.map((product) => (
-                  <ProductListItem key={product.id} product={product} />
+                  <ProductCard>
+                    <ProductListItem key={product.id} product={product} />
+                  </ProductCard>
                 ))}
-              </ProductCard>
+              </Grid>
             </>
           ) : (
             <Typography variant="body1" sx={{ mt: 2 }}>

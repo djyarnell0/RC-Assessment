@@ -53,6 +53,7 @@ export const VehicleDropdowns = ({
         <Box>
           <Select
             labelId="year-label"
+            aria-label="year-select"
             value={filters.year}
             onChange={(e) => handleYearChange(Number(e.target.value))}
             renderValue={(selected) => (selected ? selected : " Year")}
@@ -69,6 +70,7 @@ export const VehicleDropdowns = ({
         <Box>
           <Select
             labelId="make-label"
+            aria-label="make-select"
             value={filters.make}
             onChange={(e) => handleMakeChange(e.target.value)}
             displayEmpty
@@ -87,6 +89,7 @@ export const VehicleDropdowns = ({
         <Box>
           <Select
             labelId="model-label"
+            aria-label="model-select"
             value={filters.model}
             onChange={(e) => handleModelChange(e.target.value)}
             sx={{ minWidth: 120 }}
