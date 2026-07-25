@@ -1,5 +1,7 @@
 import { Product, VehicleOptions } from "../data/mockData";
 
+// This function builds all vehicle options from mock products(passed in by parent component where invoked) and creates new sets for each field.
+
 export const buildVehicleOptions = (products: Product[]): VehicleOptions => {
   const years = [...new Set(products.map((product) => product.year))].sort(
     (a, b) => a - b,

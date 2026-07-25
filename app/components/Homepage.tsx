@@ -14,21 +14,26 @@ import { buildVehicleOptions } from "../utils/BuildVehicleOptionsUtil";
 import { validateVehicleFilters } from "../utils/ValidateVehicleFilters";
 
 export default function HomePage() {
+  // Build vehicle options from the product data. Memoized to avoid recomputing on every render. In a production app, the products would likely come from an API or cache, and these options would be rebuilt only when that data changes.
   const vehicleOptions = useMemo(() => buildVehicleOptions(MOCK_PRODUCTS), []);
 
+  // get searchParams, router, and pathname initialized for URL search and modification
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
+  // get year param
   const yearParam = searchParams.get("year");
 
+  //get raw filters, then pass them into sanitization function
   const rawFilters: VehicleFilter = {
     year: yearParam ? Number(yearParam) : "",
     make: searchParams.get("make") || "",
     model: searchParams.get("model") || "",
   };
-
   const filters = validateVehicleFilters(rawFilters, vehicleOptions);
+
+  // update filters when changed, useCallback ensures only runs on update.
   const updateFilters = useCallback(
     (updates: Partial<VehicleFilter>) => {
       const params = new URLSearchParams(searchParams);
@@ -37,7 +42,7 @@ export default function HomePage() {
         ...filters,
         ...updates,
       };
-
+      //for each param, if they are empty, delete existing, otherwise set to value.
       if (nextFilters.year === "") {
         params.delete("year");
       } else {
@@ -56,11 +61,13 @@ export default function HomePage() {
         params.set("model", nextFilters.model);
       }
 
+      // replace changes into URL
       router.replace(`${pathname}?${params.toString()}`);
     },
     [filters, pathname, router, searchParams],
   );
 
+  // runs only on update, updates filters.
   useEffect(() => {
     if (
       rawFilters.year !== filters.year ||
@@ -71,6 +78,7 @@ export default function HomePage() {
     }
   }, [rawFilters, filters, updateFilters]);
 
+  // filters products based on selected year make and model, and only when all 3 have values.
   const filteredProducts = MOCK_PRODUCTS.filter((product) => {
     return (
       product.year === filters.year &&
@@ -79,8 +87,10 @@ export default function HomePage() {
     );
   });
 
+  // check to see if vehicle has associated products
   const hasProducts = filteredProducts.length > 0;
 
+  //completion state for when all 3 values are filled.
   const filtersComplete =
     filters.year !== "" && filters.make !== "" && filters.model !== "";
 
@@ -137,6 +147,7 @@ export default function HomePage() {
           alignItems: "center",
         }}
       >
+        {/* if filters are not completed, show all products */}
         {!filtersComplete && (
           <Grid
             container
@@ -156,7 +167,7 @@ export default function HomePage() {
             ))}
           </Grid>
         )}
-
+        {/* Only shows filtered products when year, make, and model are filled, and are valid inputs. If the vehicle has no products, show no products message. */}
         {filtersComplete &&
           (hasProducts ? (
             <>

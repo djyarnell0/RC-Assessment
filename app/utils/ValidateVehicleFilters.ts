@@ -1,6 +1,8 @@
 import { VehicleOptions } from "../data/mockData";
 import { VehicleFilter } from "../types/types";
 
+// this function validates URL params in order to avoid values that do not exist for year/make/model. If one is inputted, it cleans URL back to closest valid input.
+
 export const validateVehicleFilters = (
   filters: VehicleFilter,
   vehicleOptions: VehicleOptions,

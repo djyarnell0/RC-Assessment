@@ -15,14 +15,17 @@ export const VehicleDropdowns = ({
   filters,
   updateFilters,
 }: VehicleDropdownsProps) => {
+  // get makes from vehicle options
   const makes =
     filters.year === "" ? [] : vehicleOptions.makesByYear[filters.year];
 
+  // get models from vehicle options
   const models =
     filters.year === "" || filters.make === ""
       ? []
       : vehicleOptions.modelsByYearAndMake[filters.year][filters.make];
 
+  // handle value changes for year make and model dropdowns
   const handleYearChange = (year: number | "") => {
     updateFilters({
       year,
