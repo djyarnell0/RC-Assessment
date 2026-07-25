@@ -2,7 +2,6 @@
 
 import { Stack, Select, MenuItem, Box, Button } from "@mui/material";
 import { VehicleOptions } from "../data/mockData";
-import { Dispatch, SetStateAction } from "react";
 import { VehicleFilter } from "../types/types";
 
 type VehicleDropdownsProps = {
