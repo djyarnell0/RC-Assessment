@@ -8,13 +8,13 @@ import { VehicleFilter } from "../types/types";
 type VehicleDropdownsProps = {
   vehicleOptions: VehicleOptions;
   filters: VehicleFilter;
-  setFilters: Dispatch<SetStateAction<VehicleFilter>>;
+  updateFilters: (updates: Partial<VehicleFilter>) => void;
 };
 
 export const VehicleDropdowns = ({
   vehicleOptions,
   filters,
-  setFilters,
+  updateFilters,
 }: VehicleDropdownsProps) => {
   const makes =
     filters.year === "" ? [] : vehicleOptions.makesByYear[filters.year];
@@ -24,21 +24,25 @@ export const VehicleDropdowns = ({
       ? []
       : vehicleOptions.modelsByYearAndMake[filters.year][filters.make];
 
-  const handleYearChange = (year: number) => {
-    setFilters({ year, make: "", model: "" });
+  const handleYearChange = (year: number | "") => {
+    updateFilters({
+      year,
+      make: "",
+      model: "",
+    });
   };
+
   const handleMakeChange = (make: string) => {
-    setFilters((prev) => ({
-      ...prev,
+    updateFilters({
       make,
       model: "",
-    }));
+    });
   };
+
   const handleModelChange = (model: string) => {
-    setFilters((prev) => ({
-      ...prev,
+    updateFilters({
       model,
-    }));
+    });
   };
 
   return (
@@ -98,7 +102,7 @@ export const VehicleDropdowns = ({
         </Box>
         <Button
           variant="outlined"
-          onClick={() => setFilters({ year: "", make: "", model: "" })}
+          onClick={() => updateFilters({ year: "", make: "", model: "" })}
           sx={{ mt: 2, color: "black", borderColor: "black" }}
         >
           Reset Filters
