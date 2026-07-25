@@ -23,7 +23,9 @@ export default function Home() {
       product.model === vehicleFilter.model
     );
   });
+
   const hasProducts = filteredProducts.length > 0;
+
   const filtersComplete =
     vehicleFilter.year !== "" &&
     vehicleFilter.make !== "" &&
@@ -70,7 +72,7 @@ export default function Home() {
           />
         </Box>
       </Box>
-      <Card
+      <Box
         sx={{
           p: 2,
           mt: 2,
@@ -80,8 +82,12 @@ export default function Home() {
           minHeight: "30em",
           justifyContent: "center",
           alignItems: "center",
+          backgroundColor: "#f5f5f5",
         }}
       >
+        <Typography variant="h4" sx={{ color: "black" }}>
+          Products
+        </Typography>
         {!filtersComplete && (
           <Grid
             container
@@ -90,8 +96,6 @@ export default function Home() {
             sx={{
               flexWrap: "wrap",
               justifyContent: "center",
-              paddingLeft: 5,
-              paddingBottom: 5,
             }}
           >
             {MOCK_PRODUCTS.map((product) => (
@@ -112,18 +116,28 @@ export default function Home() {
                   {vehicleFilter.model}:
                 </i>
               </Typography>
-              <ProductCard>
+              <Grid
+                container
+                spacing={2}
+                direction="row"
+                sx={{
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
                 {filteredProducts.map((product) => (
-                  <ProductListItem key={product.id} product={product} />
+                  <ProductCard key={product.id}>
+                    <ProductListItem product={product} />
+                  </ProductCard>
                 ))}
-              </ProductCard>
+              </Grid>
             </>
           ) : (
-            <Typography variant="body1" sx={{ mt: 2 }}>
+            <Typography variant="body1" sx={{ mt: 2, color: "black" }}>
               No products found for your vehicle.
             </Typography>
           ))}
-      </Card>
+      </Box>
     </Container>
   );
 }
