@@ -1,6 +1,6 @@
 "use client";
 
-import { Typography, Card } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Container, Box, Grid } from "@mui/system";
 import { useState } from "react";
 import { MOCK_PRODUCTS, VEHICLE_OPTIONS } from "../data/mockData";
