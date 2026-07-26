@@ -49,7 +49,12 @@ export const VehicleDropdowns = ({
 
   return (
     <>
-      <Stack direction="row" spacing={2}>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        sx={{ alignItems: { xs: "center" } }}
+        spacing={2}
+        width="100%"
+      >
         <Box>
           <Select
             labelId="year-label"

@@ -35,11 +35,11 @@ The application allows users to select a vehicle by **Year**, **Make**, and **Mo
 ### Bonus Features
 
 - ✅ Vehicle selections are synchronized with URL search parameters
-- ✅ Dropdown options can be derived from product data
+- ✅ Dropdown options are dynamically derived from product data
+- ✅ Asynchronous product data fetching with loading and error states
 - ✅ Responsive, accessible UI using Material UI
 - ✅ Keyboard-friendly form controls with proper labels
-- ✅ Loading state using React Suspense
-- ✅ Skeleton placeholders during loading
+- ✅ Skeleton placeholders displayed while data is loading
 - ✅ Strong TypeScript typing throughout the application
 - ✅ Shared styling using reusable theme/style utilities
 
@@ -89,19 +89,37 @@ http://localhost:3000
 - Components are organized by responsibility to improve readability and maintainability.
 - Material UI provides a consistent, accessible component library while Tailwind is used for utility styling where appropriate.
 - TypeScript interfaces are shared across the application to ensure strong type safety.
+- Product data is fetched asynchronously through a dedicated data-fetching utility to mirror how the application would consume an API in production.
 
 ---
+
+## Development
+
+### Simulating a Loading State
+
+The application uses a mock asynchronous data-fetching utility (`fetchProducts`) to simulate an API request. A one-second delay is intentionally included so the loading skeletons can be observed during development.
+
+### Simulating an Error
+
+The data-fetching utility also supports testing the application's error handling.
+
+In `utils/fetchProducts.ts`, change:
+
+```ts
+const shouldFail = false;
+```
 
 ## Future Improvements
 
 If this were expanded beyond the assessment, I would consider:
 
-- Integrating a real backend API instead of mock data
+- Replace the simulated async data source with a real backend API
+- Move product fetching to server-side rendering or React Server Components where appropriate
+- Add request caching and revalidation for improved performance
 - Adding unit and integration tests (Jest/Vitest + React Testing Library)
-- Server-side data fetching and caching where appropriate
 - Product pagination or virtualization for large datasets
 - Product search and sorting
-- Improved animations and micro-interactions
+- Improved animation
 - Error boundaries and retry handling for failed requests
 
 ---

@@ -1,7 +1,12 @@
 "use client";
 
-import { Typography, Card, CircularProgress } from "@mui/material";
-import { Container, Box, Grid } from "@mui/system";
+import {
+  Typography,
+  CircularProgress,
+  Container,
+  Box,
+  Grid,
+} from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Product } from "../data/mockData";
 import { VehicleFilter } from "../types/types";
@@ -12,25 +17,44 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { buildVehicleOptions } from "../utils/BuildVehicleOptionsUtil";
 import { validateVehicleFilters } from "../utils/ValidateVehicleFilters";
 import { fetchProducts } from "@/utils/fetchProducts";
+import { centeredBox } from "@/app/styles/theme";
 
 export default function HomePage() {
   // Build vehicle options from the product data. Memoized to avoid recomputing on every render. In a production app, the products would likely come from an API or cache, and these options would be rebuilt only when that data changes.
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadProducts = async () => {
-      const data = await fetchProducts();
-
-      setProducts(data);
-      setLoading(false);
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unexpected error occurred.",
+        );
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadProducts();
   }, []);
 
-  const vehicleOptions = useMemo(() => buildVehicleOptions(products), []);
+  const vehicleOptions = useMemo(
+    () => buildVehicleOptions(products),
+    [products],
+  );
+
+  if (error) {
+    return (
+      <Container sx={{ mt: 4 }}>
+        <Typography color="error">{error}</Typography>
+      </Container>
+    );
+  }
 
   // get searchParams, router, and pathname initialized for URL search and modification
   const searchParams = useSearchParams();
@@ -110,7 +134,7 @@ export default function HomePage() {
     filters.year !== "" && filters.make !== "" && filters.model !== "";
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 4, minWidth: { xs: "100%", sm: "S" } }}>
       <Typography variant="h4" gutterBottom>
         Vehicle Part Finder
       </Typography>
@@ -126,32 +150,26 @@ export default function HomePage() {
         </Box>
       ) : (
         <>
-          <Box
-            sx={{
-              p: 2,
-              mt: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              minHeight: "30em",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#f5f5f5",
-            }}
-          >
+          <Box sx={centeredBox}>
             <Typography
               variant="body1"
               sx={{ fontWeight: "bold", textAlign: "center", color: "black" }}
+              noWrap
             >
               SHOP PARTS FOR YOUR VEHICLE
             </Typography>
+
             <Box
               sx={{
                 display: "flex",
-                p: 3,
                 justifyContent: "center",
+                width: {
+                  xs: "100%",
+                  sm: "fit-content",
+                },
+                p: 3,
                 border: "1px solid red",
-                borderRadius: "8px",
+                borderRadius: 2,
               }}
             >
               <VehicleDropdowns
@@ -161,26 +179,15 @@ export default function HomePage() {
               />
             </Box>
           </Box>
-          <Card
-            sx={{
-              p: 2,
-              mt: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              minHeight: "30em",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <Box sx={centeredBox}>
             {/* if filters are not completed, show all products */}
             {!filtersComplete && (
-              <Grid
-                container
-                spacing={2}
-                direction="row"
+              <Box
                 sx={{
+                  display: "flex",
                   flexWrap: "wrap",
+                  gap: 2,
+                  justifyContent: "center",
                 }}
               >
                 {products.map((product) => (
@@ -188,7 +195,7 @@ export default function HomePage() {
                     <ProductListItem product={product} />
                   </ProductCard>
                 ))}
-              </Grid>
+              </Box>
             )}
             {/* Only shows filtered products when year, make, and model are filled, and are valid inputs. If the vehicle has no products, show no products message. */}
             {filtersComplete &&
@@ -200,12 +207,13 @@ export default function HomePage() {
                       {filters.year} {filters.make} {filters.model}:
                     </i>
                   </Typography>
-                  <Grid
-                    container
-                    spacing={2}
-                    direction="row"
+                  <Box
                     sx={{
+                      display: "flex",
                       flexWrap: "wrap",
+                      justifyContent: "center",
+                      gap: 2,
+                      width: "100%",
                     }}
                   >
                     {filteredProducts.map((product) => (
@@ -213,14 +221,14 @@ export default function HomePage() {
                         <ProductListItem key={product.id} product={product} />
                       </ProductCard>
                     ))}
-                  </Grid>
+                  </Box>
                 </>
               ) : (
                 <Typography variant="body1" sx={{ mt: 2 }}>
                   No products found for your vehicle.
                 </Typography>
               ))}
-          </Card>
+          </Box>
         </>
       )}
     </Container>

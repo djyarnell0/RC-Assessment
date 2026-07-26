@@ -10,12 +10,17 @@ export const ProductCard = ({ children }: ProductCardProps) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        padding: 2,
-        minHeight: "5em",
-        minWidth: "20em",
         justifyContent: "center",
         alignItems: "center",
-        border: "1px solid red",
+        p: 2,
+        width: {
+          xs: "100%",
+          sm: 320,
+        },
+        minHeight: 180,
+        elevation: 2,
+        border: "1px solid",
+        borderColor: "divider",
       }}
     >
       {children}
