@@ -16,14 +16,17 @@ export const VehicleDropdowns = ({
   filters,
   setFilters,
 }: VehicleDropdownsProps) => {
+  // get makes from vehicle options passed from parent
   const makes =
     filters.year === "" ? [] : vehicleOptions.makesByYear[filters.year];
 
+  // get models from years and makes (when exists) from vehicle options passed from parent
   const models =
     filters.year === "" || filters.make === ""
       ? []
       : vehicleOptions.modelsByYearAndMake[filters.year][filters.make];
 
+  // handle changes to each dropdown, when year is changed, clear all other dropdowns, make only clears model, model does not clear
   const handleYearChange = (year: number) => {
     setFilters({ year, make: "", model: "" });
   };
@@ -46,6 +49,7 @@ export const VehicleDropdowns = ({
       <Box>
         <Select
           labelId="year-label"
+          aria-label="year-select"
           value={filters.year}
           onChange={(e) => handleYearChange(Number(e.target.value))}
           renderValue={(selected) => (selected ? selected : " Year")}
@@ -62,6 +66,7 @@ export const VehicleDropdowns = ({
       <Box>
         <Select
           labelId="make-label"
+          aria-label="make-select"
           value={filters.make}
           onChange={(e) => handleMakeChange(e.target.value)}
           renderValue={(selected) => (selected ? selected : "Make")}
@@ -80,6 +85,7 @@ export const VehicleDropdowns = ({
       <Box>
         <Select
           labelId="model-label"
+          aria-label="model-select"
           value={filters.model}
           onChange={(e) => handleModelChange(e.target.value)}
           sx={{ minWidth: 120 }}

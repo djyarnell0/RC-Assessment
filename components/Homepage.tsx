@@ -1,21 +1,23 @@
 "use client";
 
-import { Typography } from "@mui/material";
-import { Container, Box, Grid } from "@mui/system";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import { useState } from "react";
 import { MOCK_PRODUCTS, VEHICLE_OPTIONS } from "../data/mockData";
 import { VehicleFilter } from "../types/types";
 import { ProductCard } from "./ProductCard";
 import { ProductListItem } from "./ProductCardItem";
 import { VehicleDropdowns } from "./VehicleDropdowns";
+import { centeredBox } from "../styles/theme";
 
 export default function Home() {
+  // set state for year make and model selection
   const [vehicleFilter, setVehicleFilter] = useState<VehicleFilter>({
     year: "",
     make: "",
     model: "",
   });
 
+  // filter products by selected year make and model
   const filteredProducts = MOCK_PRODUCTS.filter((product) => {
     return (
       product.year === vehicleFilter.year &&
@@ -24,8 +26,10 @@ export default function Home() {
     );
   });
 
+  // check if selected vehicle has products
   const hasProducts = filteredProducts.length > 0;
 
+  // check if all 3 selections have been made
   const filtersComplete =
     vehicleFilter.year !== "" &&
     vehicleFilter.make !== "" &&
@@ -36,20 +40,8 @@ export default function Home() {
       <Typography variant="h4" gutterBottom>
         Vehicle Part Finder
       </Typography>
-
-      <Box
-        sx={{
-          p: 2,
-          mt: 2,
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          minHeight: "30em",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
+      {/* centeredBox is a global reusable style */}
+      <Box sx={centeredBox}>
         <Typography
           variant="body1"
           sx={{ fontWeight: "bold", textAlign: "center", color: "black" }}
@@ -72,22 +64,11 @@ export default function Home() {
           />
         </Box>
       </Box>
-      <Box
-        sx={{
-          p: 2,
-          mt: 2,
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          minHeight: "30em",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
+      <Box sx={centeredBox}>
         <Typography variant="h4" sx={{ color: "black" }}>
           Products
         </Typography>
+        {/* when filters are incomplete, show all available products */}
         {!filtersComplete && (
           <Grid
             container
@@ -105,7 +86,7 @@ export default function Home() {
             ))}
           </Grid>
         )}
-
+        {/* Show filtered products per vehicle selection - if vehicle has no products, show no products found message */}
         {filtersComplete &&
           (hasProducts ? (
             <>

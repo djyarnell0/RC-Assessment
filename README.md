@@ -1,141 +1,71 @@
-# Take-Home Assessment: Rough Country Part Finder
-
-**Role:** Junior / Mid-level Next.js Developer
-**Expected Time:** 2–3 hours
+# Rough Country Part Finder
 
 ## Overview
 
-At Rough Country, customers find parts by selecting their vehicle. This exercise is a simplified version of that experience.
+This project is a simplified vehicle part finder built as part of the Rough Country take-home assessment. Users can select a vehicle by Year, Make, and Model to view compatible products.
 
-We want to see how you structure a Next.js App Router project, manage dependent UI state, and filter data cleanly.
-
-We are not looking for pixel-perfect design or production architecture. A complete, readable solution beats an unfinished complex one.
+The application was built with **Next.js App Router**, **TypeScript**, and **Material UI**, focusing on clean state management, reusable components, and readable code.
 
 ---
 
-## Setup
+## Tech Stack
 
-1. Scaffold a new app with **Next.js (App Router)** and **TypeScript** (`create-next-app` is fine).
-2. Copy `mockData.ts` from this repo into your project (or import it as-is).
-3. Build the part finder UI described below.
-
-TypeScript is required.
-
----
-
-## The Challenge
-
-Build a product listing page with three **dependent** dropdowns:
-
-1. **Year**
-2. **Make**
-3. **Model**
-
-### Filter rules
-
-- Make is disabled until a Year is selected.
-- Model is disabled until a Make is selected.
-- Changing Year clears Make and Model.
-- Changing Make clears Model.
-- When Year, Make, and Model are all selected, show matching products.
-- When filters are incomplete, show either all products or a prompt to finish selecting — pick one approach and keep it consistent.
-
-### Product list
-
-Each product should display:
-
-- Name
-- Year / Make / Model
-- Price
-- In-stock status
-
-### Empty state
-
-If a full selection has no matching products, show a clear message (for example: “No products found for this vehicle.”).
-
-### Reset
-
-Include a control that clears all filters.
+- Next.js (App Router)
+- React
+- TypeScript
+- Material UI (MUI)
 
 ---
 
-## Core Requirements Checklist
+## Features
 
-- [ ] Built with Next.js App Router and TypeScript
-- [ ] Dependent Year → Make → Model dropdowns with the clearing rules above
-- [ ] Dropdown options come from `VEHICLE_OPTIONS` in `mockData.ts` (not hardcoded lists)
-- [ ] Products filter correctly using `MOCK_PRODUCTS`
-- [ ] Empty state when a full selection has no matches
-- [ ] Reset clears all filters
-- [ ] Code is readable and reasonably organized (components are encouraged when they help)
+### Core Requirements
 
----
-
-## What You Do *Not* Need
-
-Skip these unless you want them as bonuses. They are covered in our senior assessment:
-
-- URL / search-param state
-- React Server Components architecture writeups
-- Caching strategies
-- Race-condition handling
-- Suspense / `error.tsx` / simulated API failures
-
-Client-side state (`useState` / similar) is the expected approach.
+- Dependent Year → Make → Model dropdowns
+- Make is disabled until a Year is selected
+- Model is disabled until a Make is selected
+- Changing Year resets Make and Model
+- Changing Make resets Model
+- Product filtering using the provided `MOCK_PRODUCTS`
+- Dropdown options generated from `VEHICLE_OPTIONS`
+- Empty state when no matching products exist
+- Reset button clears all selected filters
+- Modular component structure
 
 ---
 
-## Bonus Tasks
+## Project Structure
 
-Only after the core requirements work.
-
-1. **URL state** — Put selected Year / Make / Model in the URL so refresh preserves filters.
-2. **Derive options from products** — Instead of (or in addition to) `VEHICLE_OPTIONS`, build Make/Model choices from `MOCK_PRODUCTS` for the selected Year.
-3. **Styling & accessibility** — Clean layout, keyboard-friendly controls, labels on selects.
-4. **Loading affordance** — If you introduce async data fetching, show a simple loading state.
-
----
-
-## Deliverables
-
-1. A link to a public GitHub repository (or a zip if that is easier).
-2. A short `README` covering:
-   - How to install and run the project
-   - What you completed (core + any bonuses)
-   - What you would improve with more time
+```
+app/
+components/
+data/
+styles/
+types/
+```
 
 ---
 
-## What We Will Be Looking For
+## Installation
 
-### Next.js / UI
+```bash
+npm install
+```
 
-- App built with the Next.js App Router and TypeScript
-- Dependent dropdown behavior implemented correctly
-- UI updates when filters change
-- Clear empty and incomplete-filter states
+## Run the development server
 
-### TypeScript / JavaScript
+```bash
+npm run dev
+```
 
-- Sensible typing for products, filters, and component props
-- Filtering arrays of objects cleanly
-- Avoiding stale or inconsistent filter combinations
-- Sensible use of derived values (e.g. available makes for a year)
-
-### Code quality
-
-- Readable names and structure
-- Components split where it helps, not where it adds noise
-- No unnecessary complexity
-
-### Communication
-
-- Can you explain what you built and what you would do next?
+Open http://localhost:3000 in your browser.
 
 ---
 
-## Tips
+## What I Would Improve With More Time
 
-- Start with the filter state and clearing rules, then wire up the product list.
-- Prefer deriving filtered products from state rather than storing a second “results” list you have to keep in sync.
-- Client Components are fine for the interactive filters — you do not need to optimize Server vs Client boundaries for this assessment.
+- Add unit tests for filtering logic
+- Improve animations and transitions
+- Connect the UI to a real backend API
+- Add pagination or virtualization for large product lists
+- Improve mobile UX with additional responsive refinements
