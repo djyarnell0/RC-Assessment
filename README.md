@@ -14,8 +14,6 @@ The application allows users to select a vehicle by **Year**, **Make**, and **Mo
 - React 19
 - TypeScript
 - Material UI
-- Tailwind CSS
-- Emotion
 
 ---
 
