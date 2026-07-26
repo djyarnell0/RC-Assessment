@@ -21,16 +21,16 @@ The application was built with **Next.js App Router**, **TypeScript**, and **Mat
 
 ### Core Requirements
 
-- [✅] Dependent Year → Make → Model dropdowns
-- [✅] Make is disabled until a Year is selected
-- [✅] Model is disabled until a Make is selected
-- [✅] Changing Year resets Make and Model
-- [✅] Changing Make resets Model
-- [✅] Product filtering using the provided `MOCK_PRODUCTS`
-- [✅] Dropdown options generated from `VEHICLE_OPTIONS`
-- [✅] Empty state when no matching products exist
-- [✅] Reset button clears all selected filters
-- [✅] Modular component structure
+- ✅ Dependent Year → Make → Model dropdowns
+- ✅ Make is disabled until a Year is selected
+- ✅ Model is disabled until a Make is selected
+- ✅ hanging Year resets Make and Model
+- ✅ Changing Make resets Model
+- ✅ Product filtering using the provided `MOCK_PRODUCTS`
+- ✅ Dropdown options generated from `VEHICLE_OPTIONS`
+- ✅ Empty state when no matching products exist
+- ✅ Reset button clears all selected filters
+- ✅ Modular component structure
 
 ---
 
