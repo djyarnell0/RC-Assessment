@@ -85,7 +85,7 @@ http://localhost:3000
 - Product results are derived from the current filter state rather than maintaining a separate results state.
 - Filter dependencies prevent invalid Year/Make/Model combinations.
 - Components are organized by responsibility to improve readability and maintainability.
-- Material UI provides a consistent, accessible component library while Tailwind is used for utility styling where appropriate.
+- Material UI provides a consistent, accessible component library.
 - TypeScript interfaces are shared across the application to ensure strong type safety.
 - Product data is fetched asynchronously through a dedicated data-fetching utility to mirror how the application would consume an API in production.
 
