@@ -4,7 +4,7 @@
 
 This project is a simplified vehicle part finder built for the Rough Country Next.js take-home assessment.
 
-The application allows users to select a vehicle by **Year**, **Make**, and **Model** to view compatible products. It was built with **Next.js App Router**, **React**, **TypeScript**, **Material UI**, and **Tailwind CSS**, with an emphasis on clean state management, reusable components, accessibility, and maintainable code.
+The application allows users to select a vehicle by **Year**, **Make**, and **Model** to view compatible products. It was built with **Next.js App Router**, **React**, **TypeScript**, **Material UI**, with an emphasis on clean state management, reusable components, accessibility, and maintainable code.
 
 ---
 
@@ -24,8 +24,7 @@ The application allows users to select a vehicle by **Year**, **Make**, and **Mo
 - ✅ Built with Next.js App Router and TypeScript
 - ✅ Dependent Year → Make → Model dropdowns
 - ✅ Correct filter reset behavior
-- ✅ Dropdown options generated from `VEHICLE_OPTIONS`
-- ✅ Products filtered using `MOCK_PRODUCTS`
+- ✅ Year, Make, Mode, and Products filtered using `MOCK_PRODUCTS`
 - ✅ Empty state when no matching products are found
 - ✅ Reset button clears all selected filters
 - ✅ Clean, modular component structure
@@ -37,7 +36,7 @@ The application allows users to select a vehicle by **Year**, **Make**, and **Mo
 - ✅ Asynchronous product data fetching with loading and error states
 - ✅ Responsive, accessible UI using Material UI
 - ✅ Keyboard-friendly form controls with proper labels
-- ✅ Skeleton placeholders displayed while data is loading
+- ✅ Loading circle displayed while data is loading
 - ✅ Strong TypeScript typing throughout the application
 - ✅ Shared styling using reusable theme/style utilities
 
@@ -95,7 +94,7 @@ http://localhost:3000
 
 ### Simulating a Loading State
 
-The application uses a mock asynchronous data-fetching utility (`fetchProducts`) to simulate an API request. A one-second delay is intentionally included so the loading skeletons can be observed during development.
+The application uses a mock asynchronous data-fetching utility (`fetchProducts`) to simulate an API request. A one-second delay is intentionally included so the loading circle can be observed during development.
 
 ### Simulating an Error
 

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Typography,
-  CircularProgress,
-  Container,
-  Box,
-  Grid,
-} from "@mui/material";
+import { Typography, CircularProgress, Container, Box } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Product } from "../data/mockData";
 import { VehicleFilter } from "../types/types";
@@ -48,14 +42,6 @@ export default function HomePage() {
     [products],
   );
 
-  if (error) {
-    return (
-      <Container sx={{ mt: 4 }}>
-        <Typography color="error">{error}</Typography>
-      </Container>
-    );
-  }
-
   // get searchParams, router, and pathname initialized for URL search and modification
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -65,14 +51,14 @@ export default function HomePage() {
   const yearParam = searchParams.get("year");
 
   //get raw filters, then pass them into sanitization function
-  const rawFilters: VehicleFilter = {
-    year: yearParam ? Number(yearParam) : "",
-    make: searchParams.get("make") || "",
-    model: searchParams.get("model") || "",
-  };
-  const filters = validateVehicleFilters(rawFilters, vehicleOptions);
+  const filters = validateVehicleFilters(
+    yearParam ? Number(yearParam) : "",
+    searchParams.get("make") ?? "",
+    searchParams.get("model") ?? "",
+    vehicleOptions,
+  );
 
-  // update filters when changed, useCallback ensures only runs on update.
+  // memoize so its reference only changes when its dependencies change.
   const updateFilters = useCallback(
     (updates: Partial<VehicleFilter>) => {
       const params = new URLSearchParams(searchParams);
@@ -106,17 +92,6 @@ export default function HomePage() {
     [filters, pathname, router, searchParams],
   );
 
-  // runs only on update, updates filters.
-  useEffect(() => {
-    if (
-      rawFilters.year !== filters.year ||
-      rawFilters.make !== filters.make ||
-      rawFilters.model !== filters.model
-    ) {
-      updateFilters(filters);
-    }
-  }, [rawFilters, filters, updateFilters]);
-
   // filters products based on selected year make and model
   const filteredProducts = products.filter((product) => {
     return (
@@ -126,28 +101,32 @@ export default function HomePage() {
     );
   });
 
-  // check to see if vehicle has associated products
-  const hasProducts = filteredProducts.length > 0;
-
   //completion state for when all 3 values are filled.
   const filtersComplete =
     filters.year !== "" && filters.make !== "" && filters.model !== "";
 
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 8,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+
   return (
-    <Container sx={{ mt: 4, minWidth: { xs: "100%", sm: "S" } }}>
+    <Container sx={{ mt: 4, minWidth: { xs: "100%" } }}>
       <Typography variant="h4" gutterBottom>
         Vehicle Part Finder
       </Typography>
-      {loading ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            mt: 8,
-          }}
-        >
-          <CircularProgress />
-        </Box>
+      {error ? (
+        <Typography color="error" sx={{ mt: 2 }}>
+          {error}
+        </Typography>
       ) : (
         <>
           <Box sx={centeredBox}>
@@ -198,36 +177,31 @@ export default function HomePage() {
               </Box>
             )}
             {/* Only shows filtered products when year, make, and model are filled, and are valid inputs. If the vehicle has no products, show no products message. */}
-            {filtersComplete &&
-              (hasProducts ? (
-                <>
-                  <Typography variant="body1" sx={{ mt: 2 }}>
-                    Products for your{" "}
-                    <i>
-                      {filters.year} {filters.make} {filters.model}:
-                    </i>
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      justifyContent: "center",
-                      gap: 2,
-                      width: "100%",
-                    }}
-                  >
-                    {filteredProducts.map((product) => (
-                      <ProductCard>
-                        <ProductListItem key={product.id} product={product} />
-                      </ProductCard>
-                    ))}
-                  </Box>
-                </>
-              ) : (
+            {filtersComplete && (
+              <>
                 <Typography variant="body1" sx={{ mt: 2 }}>
-                  No products found for your vehicle.
+                  Products for your{" "}
+                  <i>
+                    {filters.year} {filters.make} {filters.model}:
+                  </i>
                 </Typography>
-              ))}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    gap: 2,
+                    width: "100%",
+                  }}
+                >
+                  {filteredProducts.map((product) => (
+                    <ProductCard key={product.id}>
+                      <ProductListItem product={product} />
+                    </ProductCard>
+                  ))}
+                </Box>
+              </>
+            )}
           </Box>
         </>
       )}

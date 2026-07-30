@@ -84,7 +84,7 @@ export const VehicleDropdowns = ({
             disabled={!filters.year}
           >
             {filters.year &&
-              makes.map((make) => (
+              (makes ?? []).map((make) => (
                 <MenuItem key={make.value} value={make.value}>
                   {make.label}
                 </MenuItem>
@@ -103,7 +103,7 @@ export const VehicleDropdowns = ({
             renderValue={(selected) => (selected ? selected : "Model")}
           >
             {filters.make &&
-              models.map((model) => (
+              (models ?? []).map((model) => (
                 <MenuItem key={model.value} value={model.value}>
                   {model.label}
                 </MenuItem>
