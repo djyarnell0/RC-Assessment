@@ -1,187 +1,126 @@
-# Take-Home Assessment: Rough Country Next.js Part Finder
-
-**Role:** Senior Next.js Developer
-**Expected Time:** 2–4 hours for core requirements
-**Bonus Depth:** Optional, if you want to demonstrate additional senior-level judgment
+# Rough Country Part Finder
 
 ## Overview
 
-At Rough Country, performance, SEO, and fitment accuracy are critical. We need fast, crawlable product discovery experiences that help customers find parts for their specific vehicle.
+This project is a simplified vehicle part finder built for the Rough Country Next.js take-home assessment.
 
-Your task is to build a simplified **Year / Make / Model** part finder using the **Next.js App Router** and **TypeScript**.
-
-We are not looking for pixel-perfect CSS. We are looking for clean architecture, strong rendering decisions, resilient data handling, and clear reasoning.
+The application allows users to select a vehicle by **Year**, **Make**, and **Model** to view compatible products. It was built with **Next.js App Router**, **React**, **TypeScript**, **Material UI**, with an emphasis on clean state management, reusable components, accessibility, and maintainable code.
 
 ---
 
-## Setup
+## Tech Stack
 
-1. Scaffold a new app with **Next.js (App Router)** and **TypeScript** (`create-next-app` is fine).
-2. Copy `mockApi.ts` from this repo into your project (or import it as-is).
-3. Build the part finder described below.
-
-TypeScript is required. Do not submit a JavaScript-only app.
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Material UI
 
 ---
 
-## The Challenge
+## Completed Requirements
 
-Build a product listing page with three dependent dropdowns:
+### Core Requirements
 
-1. Year
-2. Make
-3. Model
+- ✅ Built with Next.js App Router and TypeScript
+- ✅ Dependent Year → Make → Model dropdowns
+- ✅ Correct filter reset behavior
+- ✅ Year, Make, Mode, and Products filtered using `MOCK_PRODUCTS`
+- ✅ Empty state when no matching products are found
+- ✅ Reset button clears all selected filters
+- ✅ Clean, modular component structure
 
-Rules:
+### Bonus Features
 
-* Make cannot be selected until Year is chosen.
-* Model cannot be selected until Make is chosen.
-* Changing Year should clear Make and Model.
-* Changing Make should clear Model.
-* Once Year, Make, and Model are selected, matching mock products should display.
+- ✅ Vehicle selections are synchronized with URL search parameters
+- ✅ Dropdown options are dynamically derived from product data
+- ✅ Asynchronous product data fetching with loading and error states
+- ✅ Responsive, accessible UI using Material UI
+- ✅ Keyboard-friendly form controls with proper labels
+- ✅ Loading circle displayed while data is loading
+- ✅ Strong TypeScript typing throughout the application
+- ✅ Shared styling using reusable theme/style utilities
 
-Example URL:
+---
 
-```txt
-/part-finder?year=2021&make=ford&model=bronco
+## Project Structure
+
+```text
+app/
+├── components/
+├── data/
+├── styles/
+├── types/
+├── globals.css
+├── layout.tsx
+└── page.tsx
 ```
 
-## Core Requirements
+---
 
-### 1. URL as the Source of Truth
+## Installation
 
-Filter state must live in the URL search parameters.
+Install dependencies:
 
-A user should be able to:
-
-* Refresh the page and preserve the selected filters.
-* Share the URL and load the same filtered state.
-* Navigate quickly between selections without the UI becoming stale or incorrect.
-
-Use stable, readable URL values such as:
-
-```txt
-?year=2021&make=ford&model=grand-cherokee
+```bash
+npm install
 ```
 
-Display labels may differ from URL values.
+Start the development server:
 
-### 2. Server and Client Boundaries
+```bash
+npm run dev
+```
 
-Use the Next.js App Router thoughtfully.
+Open your browser to:
 
-We want to see that you understand where React Server Components and Client Components belong.
+```
+http://localhost:3000
+```
 
-Expected behavior:
+---
 
-* Initial product results should be server-rendered when a valid full selection exists.
-* Dropdowns should feel responsive on the client.
-* Avoid making the entire page a Client Component unless you can clearly justify that decision.
+## Design Decisions
 
-### 3. Loading and Error States
+- Product results are derived from the current filter state rather than maintaining a separate results state.
+- Filter dependencies prevent invalid Year/Make/Model combinations.
+- Components are organized by responsibility to improve readability and maintainability.
+- Material UI provides a consistent, accessible component library.
+- TypeScript interfaces are shared across the application to ensure strong type safety.
+- Product data is fetched asynchronously through a dedicated data-fetching utility to mirror how the application would consume an API in production.
 
-The provided mock API includes artificial latency and optional random failures.
+---
 
-Your UI should gracefully handle:
+## Development
 
-* Loading states.
-* Empty product results.
-* Invalid URL combinations.
-* API errors.
+### Simulating a Loading State
 
-Use Suspense and/or route-level error handling where appropriate.
+The application uses a mock asynchronous data-fetching utility (`fetchProducts`) to simulate an API request. A one-second delay is intentionally included so the loading circle can be observed during development.
 
-### 4. Caching Strategy
+### Simulating an Error
 
-Vehicle filter data changes rarely. Product inventory may change more often.
+The data-fetching utility also supports testing the application's error handling.
 
-Implement or clearly explain a caching strategy for:
+In `utils/fetchProducts.ts`, change:
 
-* Year / Make / Model data.
-* Product results.
+```ts
+const shouldFail = false;
+```
 
-Because this mock API is a local async utility rather than a real HTTP fetch, it is acceptable to explain how your strategy would map to real production data fetching.
+## Future Improvements
 
-### 5. Race Condition Safety
+If this were expanded beyond the assessment, I would consider:
 
-The UI should remain correct during rapid filter changes.
+- Replace the simulated async data source with a real backend API
+- Move product fetching to server-side rendering or React Server Components where appropriate
+- Add request caching and revalidation for improved performance
+- Adding unit and integration tests (Jest/Vitest + React Testing Library)
+- Product pagination or virtualization for large datasets
+- Product search and sorting
+- Improved animation
+- Error boundaries and retry handling for failed requests
 
-You may solve this through URL-driven navigation, request cancellation, keyed rendering, transition state, local derivation of dropdown options, or another appropriate approach.
+---
 
-Explain your decision in the README.
+## Notes
 
-## Bonus Items
-
-These are not required, but they may help demonstrate senior-level depth:
-
-* Fine-grained Suspense boundaries.
-* `error.tsx` boundaries with retry behavior.
-* Metadata, canonical URL, or SEO strategy explanation.
-* Accessibility improvements.
-* Basic tests.
-* Optimistic or pending UI with `useTransition`.
-* Route normalization or redirects for invalid/stale params.
-* A short Loom walkthrough.
-
-## Mock API
-
-Use `mockApi.ts` from this repository.
-
-It exports:
-
-* `fetchFilterData()` — Year / Make / Model options
-* `fetchProducts({ year, make, model })` — matching products
-
-Optional env tunables:
-
-* `MOCK_API_FAILURE_RATE` (default `0.15`)
-* `MOCK_API_MIN_LATENCY_MS` (default `500`)
-* `MOCK_API_MAX_LATENCY_MS` (default `3000`)
-
-You may adapt the file slightly if needed, but keep the async behavior, failure simulation, and TypeScript types.
-
-## Deliverables
-
-Please provide:
-
-1. A link to a public GitHub repository.
-2. A `README.md` explaining:
-
-   * Your App Router structure.
-   * What is server-rendered vs client-rendered.
-   * How URL state is handled.
-   * How loading and error states are handled.
-   * Your caching strategy.
-   * How your solution avoids stale UI or race conditions.
-   * Any tradeoffs you made due to time.
-3. Optional: a 3–5 minute Loom video walking through your architecture.
-
-## What We Are Looking For
-
-### Architecture
-
-* Next.js App Router + TypeScript throughout.
-* Clean App Router structure.
-* Appropriate Server Component and Client Component boundaries.
-* Clear separation between data access, validation, UI, and URL state.
-* Sensible typing for filters, products, and component props.
-
-### Performance
-
-* Server-rendered product results when possible.
-* Minimal unnecessary client-side rendering.
-* Responsive filter interactions.
-* Thoughtful caching decisions.
-
-### Resilience
-
-* Graceful loading states.
-* Graceful error handling.
-* Correct behavior during rapid filter changes.
-* Safe handling of invalid or incomplete URL params.
-
-### Senior-Level Judgment
-
-We are not looking for the most complex solution.
-
-We are looking for someone who can make practical technical decisions, explain tradeoffs clearly, and build something that resembles how they would approach production code.
+This project was completed using the provided mock data and follows the requirements outlined in the assessment while also implementing all optional bonus features.
